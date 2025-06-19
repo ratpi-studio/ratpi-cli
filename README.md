@@ -4,10 +4,10 @@
 
 ## Installation
 
-You can run it directly with `npx`:
+You can run it directly with `bunx`:
 
 ```bash
-npx ratpi-cli create-script:init
+bunx ratpi-cli create-script:init
 ```
 
 ## Usage
@@ -21,14 +21,25 @@ Options:
 - `--template <name>` – use one of the built‑in templates located in `templates/`.
 - `--use <path>` – path to a JSON configuration file describing the commands.
 - `--no-install-deps` – skip installing `commander` and `chalk` as devDependencies in the current project.
+- `--output <dir>` – directory where the project will be generated. If not provided you will be prompted.
 
 A configuration file should look like:
 
 ```json
 {
-  "name": "my-script",
-  "commands": [
-    { "name": "hello", "description": "Print hello" }
+  "name": "supercli",
+  "description": "Un outil CLI tout-en-un pour automatiser vos tâches.",
+  "version": "1.0.0",
+  "args": [
+    {
+      "name": "name",
+      "small": "n",
+      "type": "string",
+      "required": false,
+      "description": "Nom de la personne à saluer",
+      "example": "Alex",
+      "interactive": true
+    }
   ]
 }
 ```
@@ -38,8 +49,8 @@ This will create a new folder `my-script` containing an executable `index.js` us
 ## Development
 
 ```bash
-npm install
-npm run build
+bun install
+bun run build
 ```
 
 ## Publishing

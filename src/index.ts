@@ -15,11 +15,13 @@ program
   .option('--template <name>', 'Template name')
   .option('--use <path>', 'Path to JSON config file')
   .option('--no-install-deps', 'Skip installation of dev dependencies')
-  .action((options) => {
-    createScriptInit({
+  .option('--output <dir>', 'Output directory for generated project')
+  .action(async (options) => {
+    await createScriptInit({
       template: options.template,
       use: options.use,
-      installDeps: options.installDeps
+      installDeps: options.installDeps,
+      output: options.output
     });
   });
 

@@ -17,11 +17,13 @@ program
     .option('--template <name>', 'Template name')
     .option('--use <path>', 'Path to JSON config file')
     .option('--no-install-deps', 'Skip installation of dev dependencies')
-    .action((options) => {
-    (0, createScript_1.default)({
+    .option('--output <dir>', 'Output directory for generated project')
+    .action(async (options) => {
+    await (0, createScript_1.default)({
         template: options.template,
         use: options.use,
-        installDeps: options.installDeps
+        installDeps: options.installDeps,
+        output: options.output
     });
 });
 program.parse();
