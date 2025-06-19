@@ -8,12 +8,20 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const child_process_1 = require("child_process");
 const chalk_1 = __importDefault(require("chalk"));
-function createScriptInit(options) {
-    let template = { name: 'my-script', commands: [] };
+const readline_1 = __importDefault(require("readline"));
+const ajv_1 = __importDefault(require("ajv"));
+const json_schema_draft_06_json_1 = __importDefault(require("ajv/dist/refs/json-schema-draft-06.json"));
+async function createScriptInit(options) {
+    const schemaPath = path_1.default.resolve(__dirname, '../../schemas/ratpi-cli-config.schema.json');
+    const schema = JSON.parse(fs_1.default.readFileSync(schemaPath, 'utf8'));
+    const ajv = new ajv_1.default({ strict: false });
+    ajv.addMetaSchema(json_schema_draft_06_json_1.default);
+    const validate = ajv.compile(schema);
+    let config;
     if (options.use) {
         const jsonPath = path_1.default.resolve(process.cwd(), options.use);
         if (fs_1.default.existsSync(jsonPath)) {
-            template = JSON.parse(fs_1.default.readFileSync(jsonPath, 'utf8'));
+            config = JSON.parse(fs_1.default.readFileSync(jsonPath, 'utf8'));
         }
         else {
             console.error(chalk_1.default.red(`Config file not found: ${jsonPath}`));
@@ -23,38 +31,94 @@ function createScriptInit(options) {
     else if (options.template) {
         const builtIn = path_1.default.resolve(__dirname, '../../templates', `${options.template}.json`);
         if (fs_1.default.existsSync(builtIn)) {
-            template = JSON.parse(fs_1.default.readFileSync(builtIn, 'utf8'));
+            config = JSON.parse(fs_1.default.readFileSync(builtIn, 'utf8'));
         }
         else {
             console.error(chalk_1.default.red(`Template not found: ${options.template}`));
             process.exit(1);
         }
     }
-    const scriptDir = path_1.default.resolve(process.cwd(), template.name || 'my-script');
+    else {
+        console.error(chalk_1.default.red('No configuration provided'));
+        process.exit(1);
+    }
+    if (!config) {
+        throw new Error('Configuration could not be loaded');
+    }
+    if (!validate(config)) {
+        console.error(chalk_1.default.red('Invalid configuration:'));
+        console.error(validate.errors);
+        process.exit(1);
+    }
+    for (const a of config.args) {
+        if (a.type === 'enum' && (!a.values || a.values.length === 0)) {
+            console.error(chalk_1.default.red(`Arg ${a.name} is enum but values are missing`));
+            process.exit(1);
+        }
+    }
+    let output = options.output;
+    if (!output) {
+        output = await ask(`Output directory (${config.name}): `) || config.name;
+    }
+    const scriptDir = path_1.default.resolve(process.cwd(), output);
     if (!fs_1.default.existsSync(scriptDir)) {
         fs_1.default.mkdirSync(scriptDir, { recursive: true });
     }
-    fs_1.default.writeFileSync(path_1.default.join(scriptDir, 'index.js'), generateScript(template.commands || []));
+    fs_1.default.writeFileSync(path_1.default.join(scriptDir, 'index.js'), generateScript(config));
     fs_1.default.chmodSync(path_1.default.join(scriptDir, 'index.js'), 0o755);
     console.log(chalk_1.default.green(`Created script in ${scriptDir}`));
     if (options.installDeps !== false) {
         installDeps(['commander', 'chalk']);
     }
 }
-function generateScript(commands) {
-    const commandLines = commands
-        .map((c) => `program.command('${c.name}').description('${c.description}').action(() => {\n  console.log(chalk.green('${c.name} executed'));\n});`)
+function ask(question) {
+    const rl = readline_1.default.createInterface({ input: process.stdin, output: process.stdout });
+    return new Promise((resolve) => rl.question(question, (answer) => { rl.close(); resolve(answer); }));
+}
+function escape(str) {
+    return str.replace(/'/g, "\\'");
+}
+function generateOption(arg) {
+    if (arg.type === 'boolean') {
+        const flag = `${arg.small ? '-' + arg.small + ', ' : ''}--${arg.name}`;
+        return `  program.option('${flag}', '${escape(arg.description)}');`;
+    }
+    const value = arg.required ? `<${arg.name}>` : `[${arg.name}]`;
+    const flag = `${arg.small ? '-' + arg.small + ', ' : ''}--${arg.name} ${value}`;
+    let desc = arg.description;
+    if (arg.type === 'enum' && arg.values) {
+        desc += ' (' + arg.values.join('|') + ')';
+    }
+    return `  program.option('${flag}', '${escape(desc)}');`;
+}
+function generateScript(config) {
+    const optionLines = config.args.map((a) => generateOption(a)).join('\n');
+    const interactive = config.args
+        .filter((a) => a.interactive)
+        .map((a) => `  if(!opts.${a.name}) opts.${a.name} = await ask('${escape(a.description)}: ');`)
         .join('\n');
+    const header = `  const program = new Command();
+  program.name('${escape(config.name)}')
+    .description('${escape(config.description)}')
+    .version('${config.version}');`;
     return `#!/usr/bin/env node
 const { Command } = require('commander');
 const chalk = require('chalk');
+const readline = require('readline');
 
-const program = new Command();
-program.name('script').description('Generated script').version('0.1.0');
+function ask(q) {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  return new Promise(res => rl.question(q, ans => { rl.close(); res(ans); }));
+}
 
-${commandLines}
-
-program.parse();
+(async () => {
+${header}
+${optionLines}
+  program.parse();
+  const opts = program.opts();
+${interactive}
+  console.log(opts);
+})();
 `;
 }
 function detectPackageManager() {
@@ -65,13 +129,13 @@ function detectPackageManager() {
         return 'pnpm';
     if (agent.includes('yarn'))
         return 'yarn';
-    if (fs_1.default.existsSync('bun.lockb'))
+    if (fs_1.default.existsSync('bun.lock') || fs_1.default.existsSync('bun.lockb'))
         return 'bun';
     if (fs_1.default.existsSync('pnpm-lock.yaml'))
         return 'pnpm';
     if (fs_1.default.existsSync('yarn.lock'))
         return 'yarn';
-    return 'npm';
+    return 'bun';
 }
 function installDeps(pkgs) {
     const manager = detectPackageManager();
