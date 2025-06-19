@@ -2,17 +2,16 @@ name: Node CI
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: 20
-      - run: npm install
-      - run: npm run build
+          node-version: 22
+      - run: bun install
+      - run: bun run build

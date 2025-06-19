@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'release/*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Extract version from tag
+        id: extract_version
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/release/}
+          echo "version=$TAG_NAME" >> $GITHUB_OUTPUT
+
+      - name: Update package.json version
+        run: |
+          VERSION=${{ steps.extract_version.outputs.version }}
+          jq --arg v "$VERSION" '.version = $v' package.json > package.tmp.json
+          mv package.tmp.json package.json
+
+      - name: Generate changelog
+        run: |
+          bunx conventional-changelog-cli -p angular -i CHANGELOG.md -s --commit-path .
+
+      - name: Commit version and changelog
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json CHANGELOG.md
+          git commit -m "chore(release): v${{ steps.extract_version.outputs.version }}"
+          git push
+
+      - name: Pack package
+        run: bun pm pack
+
+      - name: Find package archive
+        id: find_pkg
+        run: |
+          PKG_FILE=$(ls *.tgz | head -n1)
+          echo "pkg_file=$PKG_FILE" >> $GITHUB_OUTPUT
+
+      - name: Publish package
+        run: bun bun publish ./${{ steps.find_pkg.outputs.pkg_file }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ steps.extract_version.outputs.version }}
+          body_path: CHANGELOG.md
+          files: ${{ steps.find_pkg.outputs.pkg_file }}
