@@ -41,6 +41,9 @@ jobs:
           git commit -m "chore(release): v${{ steps.extract_version.outputs.version }}"
           git push origin HEAD:master
 
+
+      - name: Install dependencies
+        run: bun install 
       - name: Pack package
         run: bun pm pack
 
