@@ -1,0 +1,7 @@
+{
+  "name": "my-script",
+  "commands": [
+    { "name": "hello", "description": "Print hello" },
+    { "name": "bye", "description": "Print goodbye" }
+  ]
+}
