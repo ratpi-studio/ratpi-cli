@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/RatpiCLIConfig",
+  "definitions": {
+    "RatpiCLIConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Arg"
+          }
+        }
+      },
+      "required": [
+        "args",
+        "description",
+        "name",
+        "version"
+      ],
+      "title": "RatpiCLIConfig"
+    },
+    "Arg": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "small": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["string", "number", "boolean", "enum"]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        },
+        "example": {
+          "$ref": "#/definitions/Example"
+        },
+        "interactive": {
+          "type": "boolean"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "description",
+        "interactive",
+        "name",
+        "required",
+        "type"
+      ],
+      "title": "Arg",
+      "description": "Si `type` est `enum`, alors `values` doit être présent (à valider côté logique)"
+    },
+    "Example": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "title": "Example"
+    }
+  }
+}
