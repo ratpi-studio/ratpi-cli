@@ -55,7 +55,7 @@ jobs:
           echo "pkg_file=$PKG_FILE" >> $GITHUB_OUTPUT
 
       - name: Publish package
-        run: bun bun publish ./${{ steps.find_pkg.outputs.pkg_file }}
+        run: bun publish ./${{ steps.find_pkg.outputs.pkg_file }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
