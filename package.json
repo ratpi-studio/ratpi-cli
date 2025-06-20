@@ -10,6 +10,7 @@
     "test": "node --no-warnings dist/index.js --help",
     "typecheck": "tsc --noEmit",
     "knip": "knip --config knip.json",
+    "cli-doc": "ts-node scripts/cli-doc.ts",
     "lint": "eslint src --ext .ts"
   },
   "keywords": [

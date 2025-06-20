@@ -77,8 +77,14 @@ const program = new Command();
 
 program
   .name("ratpi-cli")
-  .description(rainbowLogo() + "\n" + chalk.green("ratpi-cli is a multi-purpose CLI tool for project management."))
+  .description("ratpi-cli is a multi-purpose CLI tool for project management.")
   .version(packageJson.version, "-v, --version", "Display the current version of ratpi-cli");
+
+// N'affiche le logo que dans le terminal (hors .description)
+if (require.main === module) {
+  // Terminal uniquement
+  console.log(rainbowLogo());
+}
 
 // Personnalisation de l'affichage de l'aide
 program.configureHelp({
@@ -163,4 +169,10 @@ workflow
     }
   });
 
-program.parse();
+
+if (require.main === module) {
+  program.parse();
+}
+
+
+export default program
