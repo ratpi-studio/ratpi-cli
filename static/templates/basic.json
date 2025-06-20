@@ -1,6 +1,6 @@
 {
   "name": "supercli",
-  "description": "Un outil CLI tout-en-un pour automatiser vos tâches.",
+  "description": "An all-in-one CLI tool to automate your tasks.",
   "version": "1.0.0",
   "args": [
     {
@@ -8,7 +8,7 @@
       "small": "n",
       "type": "string",
       "required": false,
-      "description": "Nom de la personne à saluer",
+      "description": "Name of the person to greet",
       "example": "Alex",
       "interactive": true
     },
@@ -17,7 +17,7 @@
       "small": "a",
       "type": "number",
       "required": false,
-      "description": "Âge de la personne",
+      "description": "Age of the person",
       "example": 42,
       "interactive": false
     },
@@ -26,8 +26,12 @@
       "small": "f",
       "type": "enum",
       "required": true,
-      "description": "Format de sortie",
-      "values": ["text", "json", "csv"],
+      "description": "Output format",
+      "values": [
+        "text",
+        "json",
+        "csv"
+      ],
       "example": "json",
       "interactive": true
     },
@@ -36,7 +40,7 @@
       "small": "d",
       "type": "boolean",
       "required": false,
-      "description": "Affiche les logs de debug",
+      "description": "Show debug logs",
       "interactive": false
     }
   ]
