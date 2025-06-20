@@ -1,3 +1,12 @@
+## 1.0.2 (2025-06-20)
+
+
+### Bug Fixes
+
+* bin ([9079133](https://github.com/ratpi-studio/ratpi-cli/commit/9079133db4da320281bbc2c5a9a7da83cc42df2f))
+
+
+
 ## 1.0.1 (2025-06-20)
 
 
