@@ -1,0 +1,25 @@
+{
+  "name": "fontsync",
+  "description": "Auto-sync fonts from Google Fonts",
+  "version": "1.0.0",
+  "args": [
+    {
+      "name": "name",
+      "small": "n",
+      "type": "string",
+      "required": false,
+      "description": "A specific font name to download from google fonts",
+      "example": "roboto",
+      "interactive": true
+    },
+    {
+      "name": "limit",
+      "small": "l",
+      "type": "number",
+      "required": false,
+      "description": "Maximum number of fonts to download",
+      "example": 42,
+      "interactive": false
+    }
+  ]
+}

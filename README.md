@@ -14,10 +14,10 @@
 
 ## 🚀 Installation
 
-You can run it directly with `bunx`:
+You can run it directly with `npx`:
 
 ```bash
-bunx ratpi-cli create-script:init
+npx ratpi-cli create-script:init
 ```
 
 ## 🛠 Usage
