@@ -5,7 +5,7 @@ import readline from "readline";
 
 import chalk from "chalk";
 import Ajv from "ajv";
-import draft6Meta from "ajv/dist/refs/json-schema-draft-06.json";
+import draft6Meta from "../../../static/schemas/ratpi-cli-config.schema.json";
 
 import type { Arg, Options, RatpiCLIConfig } from "./types";
 
@@ -121,9 +121,9 @@ function generateScript(config: RatpiCLIConfig): string {
   const madeWith = "\nconsole.log('Made with ratpi-cli: https://github.com/ratpi-studio/ratpi-cli');\n";
 
   return `#!/usr/bin/env node
-const { Command } = require('commander');
-const chalk = require('chalk');
-const readline = require('readline');
+import { Command } from 'commander';
+import chalk from 'chalk';
+import readline from 'readline';
 
 function ask(q) {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });

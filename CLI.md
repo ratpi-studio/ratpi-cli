@@ -4,7 +4,7 @@ ratpi-cli is a multi-purpose CLI tool for project management.
 
 ## Version
 
-`1.0.1`
+`1.0.2`
 
 # ratpi-cli
 
@@ -17,6 +17,7 @@ ratpi-cli is a multi-purpose CLI tool for project management.
 **Sous-commandes**
 
 - [create-script](#create-script) : Create a script template using Commander and Chalk
+- [agent](#agent) : Run a Gemini Flash AI agent
 - [workflow](#workflow) : Manage GitHub workflows
 
 
@@ -31,6 +32,11 @@ Create a script template using Commander and Chalk
 - `--skip-devDependencies` : Skip installation of dev dependencies
 - `--output <dir>` : Output directory for generated project
 - `--sample-conf` : Copy sample config (basic.json) to ./ratpi-cli.config.json
+
+
+## agent
+
+Run a Gemini Flash AI agent
 
 
 ## workflow

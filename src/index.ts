@@ -5,6 +5,7 @@ import chalk from "chalk";
 import createScriptInit from "./modules/createScripts/createScript";
 import type { Options } from "./modules/createScripts/types";
 import { listWorkflows, createWorkflowFromTemplate } from "./modules/workflows";
+import { runAgent } from "./modules/agent";
 import packageJson from "../package.json";
 
 const rainbowColors = [
@@ -141,7 +142,16 @@ program
     });
   });
 
-const workflow = program.command("workflow").description("Manage GitHub workflows");
+program
+  .command("agent")
+  .description("Run a Gemini Flash AI agent")
+  .argument("<task...>", "Task for the agent")
+  .action(async (task: string[]) => {
+    const goal = task.join(" ");
+    await runAgent(goal);
+  });
+
+  const workflow = program.command("workflow").description("Manage GitHub workflows");
 
 workflow
   .command("list")
