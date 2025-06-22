@@ -34,6 +34,7 @@ export default defineConfig({
   minify: true,
   onSuccess: () => {
     copyRecursive("static", "dist/static");
+    copyFileSync("Readme.md", "dist/Readme.md");
     const minimalPkg = {
       name: pkg.name,
       version: pkg.version,

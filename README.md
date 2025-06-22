@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="static/assets/logo.png" alt="Ratpi CLI Logo" width="65" height="65" />
+  <img src="./static/assets/logo.png" alt="Ratpi CLI Logo" width="65" height="65" />
 </p>
 
 # Ratpi CLI
@@ -114,10 +114,6 @@ bun install
 bun run build
 ```
 
-## ⚙️ Continuous Integration
-
-A simple GitHub Actions workflow is provided in `.github/workflows/ci.yml` to run the build.
-
 ## 🌐 More info
 
-Visit [ratpi-studio.com](https://ratpi-studio.com) for more tools and documentation.
+Visit [ratpi-studio.fr](https://ratpi-studio.fr) for more tools and documentation.
