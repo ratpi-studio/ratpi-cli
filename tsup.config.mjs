@@ -29,7 +29,7 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
-  target: "node20", // ← c'est la clé ici pour Node 20+
+  target: "node22",
   outDir: "dist",
   minify: true,
   onSuccess: () => {
@@ -39,6 +39,7 @@ export default defineConfig({
       version: pkg.version,
       main: "index.js",
       dependencies: pkg.dependencies,
+      engines: pkg.engines,
     };
     if (pkg.bin) {
       minimalPkg.bin = {};
