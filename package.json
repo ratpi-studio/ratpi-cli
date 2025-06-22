@@ -1,6 +1,6 @@
 {
   "name": "ratpi-cli",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A CLI grouping various tools for ratpi-studio.",
   "main": "dist/index.js",
   "scripts": {
