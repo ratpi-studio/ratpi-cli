@@ -1,7 +1,16 @@
-import { defineConfig } from 'tsup'
-import { copyFileSync, mkdirSync, existsSync, readdirSync, statSync, writeFileSync } from 'fs'
-import { join } from 'path'
-import pkg from './package.json' assert { type: 'json' }
+import { defineConfig } from "tsup";
+import {
+  copyFileSync,
+  mkdirSync,
+  existsSync,
+  readdirSync,
+  statSync,
+  writeFileSync,
+  readFileSync,
+} from "fs";
+import { join } from "path";
+
+const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
 
 function copyRecursive(src, dest) {
   if (!existsSync(src)) return;
@@ -16,22 +25,27 @@ function copyRecursive(src, dest) {
 }
 
 export default defineConfig({
-  entry: ['src/index.ts'],
+  entry: ["src/index.ts"],
   splitting: false,
   sourcemap: true,
   clean: true,
+  target: "node20", // ← c'est la clé ici pour Node 20+
+  outDir: "dist",
   minify: true,
   onSuccess: () => {
-    // Copie du dossier static
-    copyRecursive('static', 'dist/static');
-    // Génération d'un package.json minimal
+    copyRecursive("static", "dist/static");
     const minimalPkg = {
       name: pkg.name,
       version: pkg.version,
-      main: 'index.js',
-      bin: pkg.bin ? 'index.js' : undefined,
-      dependencies: pkg.dependencies
+      main: "index.js",
+      dependencies: pkg.dependencies,
     };
-    writeFileSync('dist/package.json', JSON.stringify(minimalPkg, null, 2));
-  }
-})
+    if (pkg.bin) {
+      minimalPkg.bin = {};
+      for (const cmd in pkg.bin) {
+        minimalPkg.bin[cmd] = "./index.js";
+      }
+    }
+    writeFileSync("dist/package.json", JSON.stringify(minimalPkg, null, 2));
+  },
+});
