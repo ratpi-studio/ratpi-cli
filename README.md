@@ -56,6 +56,14 @@ A configuration file should look like:
 
 This will create a new folder `my-script` containing an executable `index.js` using Commander and Chalk.
 
+## 🤖 AI Agent
+
+The `agent` command runs a small Gemini Flash 2.0 powered agent. Set `GEMINI_API_KEY` in your environment and provide a goal:
+
+```bash
+ratpi-cli agent "build me a project"
+```
+
 ## 🧑‍💻 Development
 
 ```bash
