@@ -50,16 +50,9 @@ jobs:
       - name: Install dependencies
         run: bun install
       - name: Pack package
-        run: bun pm pack
-
-      - name: Find package archive
-        id: find_pkg
-        run: |
-          PKG_FILE=$(ls *.tgz | head -n1)
-          echo "pkg_file=$PKG_FILE" >> $GITHUB_OUTPUT
-
+        run: bun build
       - name: Publish package
-        run: bun publish  --access-public ./${{ steps.find_pkg.outputs.pkg_file }}
+        run: bun publish  --access-public ./dist
         env:
           NPM_CONFIG_TOKEN: ${{ secrets.NPM_CONFIG_TOKEN }}
       - name: Create GitHub Release
@@ -68,4 +61,3 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ steps.extract_version.outputs.version }}
           body_path: CHANGELOG.md
-          files: ${{ steps.find_pkg.outputs.pkg_file }}
