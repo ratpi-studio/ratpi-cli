@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./static/assets/logo.png" alt="Ratpi CLI Logo" width="65" height="65" />
+  <img src="https://raw.githubusercontent.com/ratpi-studio/ratpi-cli/refs/heads/master/static/assets/logo.png" alt="Ratpi CLI Logo" width="65" height="65" />
 </p>
 
 # Ratpi CLI
