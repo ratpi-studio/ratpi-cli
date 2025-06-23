@@ -7,6 +7,7 @@ import type { Options } from "./modules/createScripts/types";
 import { listWorkflows, createWorkflowFromTemplate } from "./modules/workflows";
 import { runAgent } from "./modules/agent";
 import { runGh, switchGitUser } from "./modules/gh";
+import { listFiles, uploadFile, getFileLink } from "./modules/gdrive";
 import packageJson from "../package.json";
 
 const rainbowColors = [
@@ -200,6 +201,33 @@ gh
       gh.help();
     }
   });
+
+const gdrive = program.command("gdrive").description("Interact with Google Drive");
+
+gdrive
+  .command("list")
+  .description("List files in your Google Drive")
+  .action(async () => {
+    await listFiles();
+  });
+
+gdrive
+  .command("upload")
+  .description("Upload a file to Google Drive")
+  .argument("<file>", "File to upload")
+  .action(async (file: string) => {
+    await uploadFile(file);
+  });
+
+gdrive
+  .command("get-link")
+  .description("Get a web link for a file")
+  .argument("<id>", "ID of the file")
+  .action(async (id: string) => {
+    await getFileLink(id);
+  });
+
+
 
 
 if (require.main === module) {

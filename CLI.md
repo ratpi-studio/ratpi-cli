@@ -4,7 +4,7 @@ ratpi-cli is a multi-purpose CLI tool for project management.
 
 ## Version
 
-`1.1.0`
+`1.2.1`
 
 # ratpi-cli
 
@@ -20,6 +20,7 @@ ratpi-cli is a multi-purpose CLI tool for project management.
 - [agent](#agent) : Run a Gemini Flash AI agent
 - [workflow](#workflow) : Manage GitHub workflows
 - [gh](#gh) : Interact with GitHub CLI
+- [gdrive](#gdrive) : Interact with Google Drive
 
 
 ## create-script
@@ -68,8 +69,6 @@ Create a workflow from a template in .github/workflows
 
 Interact with GitHub CLI
 
-`gh [args...]` forwards any arguments to the `gh` command.
-
 **Sous-commandes**
 
 - [switch](#switch) : Configure git user.name and user.email from GitHub account
@@ -78,4 +77,30 @@ Interact with GitHub CLI
 ### switch
 
 Configure git user.name and user.email from GitHub account
+
+
+## gdrive
+
+Interact with Google Drive
+
+**Sous-commandes**
+
+- [list](#list) : List files in your Google Drive
+- [upload](#upload) : Upload a file to Google Drive
+- [get-link](#get-link) : Get a web link for a file
+
+
+### list
+
+List files in your Google Drive
+
+
+### upload
+
+Upload a file to Google Drive
+
+
+### get-link
+
+Get a web link for a file
 
