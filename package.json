@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsup",
-    "build:local": "bun run build",
+    "build:package": "bun run build",
     "prepare": "bun run build",
     "test": "node --no-warnings dist/index.js --help",
     "typecheck": "tsc --noEmit",
