@@ -6,6 +6,7 @@ import createScriptInit from "./modules/createScripts/createScript";
 import type { Options } from "./modules/createScripts/types";
 import { listWorkflows, createWorkflowFromTemplate } from "./modules/workflows";
 import { runAgent } from "./modules/agent";
+import { runGh, switchGitUser } from "./modules/gh";
 import packageJson from "../package.json";
 
 const rainbowColors = [
@@ -176,6 +177,27 @@ workflow
       console.log(chalk.green(`Workflow created: ${result}`));
     } else {
       console.log(chalk.red("Template not found in .github/workflows"));
+    }
+  });
+
+const gh = program.command("gh")
+  .description("Interact with GitHub CLI")
+  .allowUnknownOption(true);
+
+gh
+  .command("switch")
+  .description("Configure git user.name and user.email from GitHub account")
+  .action(() => {
+    switchGitUser();
+  });
+
+gh
+  .argument("[args...]", "Arguments passed to gh")
+  .action((args: string[]) => {
+    if (args.length > 0) {
+      runGh(args);
+    } else {
+      gh.help();
     }
   });
 
