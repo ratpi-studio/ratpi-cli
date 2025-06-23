@@ -4,7 +4,7 @@ ratpi-cli is a multi-purpose CLI tool for project management.
 
 ## Version
 
-`1.0.2`
+`1.1.0`
 
 # ratpi-cli
 
@@ -19,6 +19,7 @@ ratpi-cli is a multi-purpose CLI tool for project management.
 - [create-script](#create-script) : Create a script template using Commander and Chalk
 - [agent](#agent) : Run a Gemini Flash AI agent
 - [workflow](#workflow) : Manage GitHub workflows
+- [gh](#gh) : Interact with GitHub CLI
 
 
 ## create-script
@@ -61,4 +62,20 @@ Create a workflow from a template in .github/workflows
 **Options**
 
 - `--template <name>` : Template name to copy from .github/workflows
+
+
+## gh
+
+Interact with GitHub CLI
+
+`gh [args...]` forwards any arguments to the `gh` command.
+
+**Sous-commandes**
+
+- [switch](#switch) : Configure git user.name and user.email from GitHub account
+
+
+### switch
+
+Configure git user.name and user.email from GitHub account
 
