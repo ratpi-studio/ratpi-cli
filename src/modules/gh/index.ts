@@ -12,15 +12,17 @@ export function runGh(args: string[]): void {
 }
 
 export function switchGitUser(): void {
-  const nameRes = spawnSync("gh", ["api", "user", "--jq", ".name"], { encoding: "utf8" });
-  const emailRes = spawnSync("gh", ["api", "user", "--jq", ".email"], { encoding: "utf8" });
-  const name = nameRes.stdout.trim();
-  const email = emailRes.stdout.trim();
-  if (!name || !email) {
+  const result = spawnSync("gh", ["auth", "switch"], { encoding: "utf8" });
+  if (result.error) {
+    console.error(chalk.red(`Failed to switch git user: ${result.error.message}`));
+    return;
+  }
+  const loginRes = spawnSync("gh", ["api", "user", "--jq", ".login"], { encoding: "utf8" });
+  const login = loginRes.stdout.trim();
+  if (!login) {
     console.error(chalk.red("Could not retrieve user information from gh"));
     return;
   }
-  spawnSync("git", ["config", "--global", "user.name", name], { stdio: "inherit" });
-  spawnSync("git", ["config", "--global", "user.email", email], { stdio: "inherit" });
-  console.log(chalk.green(`Configured git user as ${name} <${email}>`));
+  spawnSync("git", ["config", "--global", "user.name", login], { stdio: "inherit" });
+  console.log(chalk.green(`Configured git user as ${login}`));
 }
